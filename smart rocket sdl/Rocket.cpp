@@ -157,8 +157,44 @@ void Rocket::move()
 	//cout << mPosX << "," << mPosY << " " << result << " " << mAngle << endl;
 }
 
+void Rocket::recreate()
+{
+	mDna.clear();
+
+	//Initialize the offsets
+	mPosX = SCREEN_WIDTH / 2;
+	mPosY = SCREEN_HEIGHT / 2;
+
+	//Initialize the velocity
+	mVelX = 0.0;
+	mVelY = 0.0;
+	mVelA = 0.0;
+	mAngle = 0.0;
+	mAccX = 0;
+	mAccY = 0;
+
+	mStartTime = SDL_GetTicks();
+	mCurrTime = mStartTime;
+
+	mDnaCount = 0;
+
+	mAlive = true;
+
+	for (int i = 0; i < ROCKET_DNA_LENGTH; i++) {
+		Gene newGene;
+		newGene.randomize();
+		mDna.push_back(newGene);
+	}
+	mGene.randomize();
+}
+
 void Rocket::render(SDL_Renderer * gRenderer)
 {
 	mTexture.render(gRenderer, (int)mPosX, (int)mPosY, NULL, mAngle, NULL, SDL_FLIP_NONE);
+}
+
+int Rocket::getDnaCount()
+{
+	return mDnaCount;
 }
 

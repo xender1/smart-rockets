@@ -179,6 +179,7 @@ int main(int argc, char* args[])
 					else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
 					{
 						startTime = SDL_GetTicks();
+						rocket.recreate();
 					}
 
 					//dot.handleEvent(e);
@@ -187,7 +188,7 @@ int main(int argc, char* args[])
 				//Set text to be rendered
 				timeText.str("");
 				timeText << SDL_GetTicks() - startTime;
-
+				timeText.str(to_string(rocket.getDnaCount()));
 				//Render text
 				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
 				{

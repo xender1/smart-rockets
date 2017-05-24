@@ -34,8 +34,13 @@ public:
 	//Moves the dot
 	void move();
 
+	//reinitializes rocket values
+	void recreate();
+
 	//Shows the dot on the screen
 	void render(SDL_Renderer * gRenderer);
+
+	int getDnaCount();
 
 private:
 	//the texture for the rocket
@@ -45,6 +50,7 @@ private:
 	vector<Gene> mDna;
 	vector<Gene>::iterator it;
 
+	//current dna element being acted on
 	int mDnaCount;
 
 	//The X and Y offsets of the rocket
