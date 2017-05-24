@@ -141,16 +141,18 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Dot.cpp" />
-    <ClCompile Include="Genes.cpp" />
+    <ClCompile Include="Gene.cpp" />
     <ClCompile Include="LTexture.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Population.cpp" />
     <ClCompile Include="Rocket.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dot.h" />
-    <ClInclude Include="Genes.h" />
+    <ClInclude Include="Gene.h" />
     <ClInclude Include="LTexture.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Population.h" />
     <ClInclude Include="Rocket.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

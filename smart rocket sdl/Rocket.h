@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include "Gene.h"
 
 //The rocket that will move around the screen
 class Rocket
@@ -8,6 +9,8 @@ public:
 	//The dimensions of the rocket
 	static const int ROCKET_WIDTH = 24;
 	static const int ROCKET_HEIGHT = 50;
+
+	static const int ROCKET_DNA_LENGTH = 200;
 
 	//max acceleration and velocity rates
 	static constexpr double MAX_ROCKET_VEL = 3.0;
@@ -26,7 +29,7 @@ public:
 
 	void handleEvent(SDL_Event& e);
 
-	void applyForce();
+	void setVelocityFromDna();
 
 	//Moves the dot
 	void move();
@@ -37,6 +40,12 @@ public:
 private:
 	//the texture for the rocket
 	LTexture mTexture;
+
+	Gene mGene;
+	vector<Gene> mDna;
+	vector<Gene>::iterator it;
+
+	int mDnaCount;
 
 	//The X and Y offsets of the rocket
 	double mPosX, mPosY;
@@ -51,5 +60,10 @@ private:
 	//angle
 	double mAngle;
 
+	//for figuring out which dna segment to use
+	Uint32 mStartTime;
+	Uint32 mCurrTime;
+
+	bool mAlive;
 
 };

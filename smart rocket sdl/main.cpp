@@ -2,6 +2,7 @@
 and may not be redistributed without written permission.*/
 
 #include "main.h"
+#include "Rocket.h"
 
 
 //Starts up SDL and creates window
@@ -22,10 +23,16 @@ SDL_Renderer* gRenderer = NULL;
 //Globally used font
 TTF_Font *gFont = NULL;
 
+
+//Scene textures
+LTexture gTimeTextTexture;
+
 bool init()
 {
 	//Initialization flag
 	bool success = true;
+
+	srand(time(NULL));
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -69,6 +76,13 @@ bool init()
 					printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
 					success = false;
 				}
+
+				//Initialize SDL_ttf
+				if (TTF_Init() == -1)
+				{
+					printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+					success = false;
+				}
 			}
 		}
 	}
@@ -93,13 +107,21 @@ bool loadMedia()
 
 void close()
 {
+	//Free global font
+	TTF_CloseFont(gFont);
+	gFont = NULL;
+
+	gTimeTextTexture.free();
+
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
 	gWindow = NULL;
 	gRenderer = NULL;
 
+
 	//Quit SDL subsystems
+	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 }
@@ -134,6 +156,14 @@ int main(int argc, char* args[])
 			//test rocket creation
 			Rocket rocket(gRenderer, "rocket_mini.png");
 
+			//Current time start time
+			Uint32 startTime = 0;
+
+			//Set text color as black
+			SDL_Color textColor = { 0, 0, 0, 255 };
+
+			stringstream timeText;
+
 			//While application is running
 			while (!quit)
 			{
@@ -144,10 +174,24 @@ int main(int argc, char* args[])
 					if (e.type == SDL_QUIT)
 					{
 						quit = true;
+					}					
+					//Reset start time on return keypress
+					else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
+					{
+						startTime = SDL_GetTicks();
 					}
 
 					//dot.handleEvent(e);
 					rocket.handleEvent(e);
+				}
+				//Set text to be rendered
+				timeText.str("");
+				timeText << SDL_GetTicks() - startTime;
+
+				//Render text
+				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
+				{
+					printf("Unable to render time texture!\n");
 				}
 
 				//move the dot
@@ -166,6 +210,8 @@ int main(int argc, char* args[])
 
 				dot.render(gRenderer);
 				rocket.render(gRenderer);
+
+				gTimeTextTexture.render(gRenderer, 10, SCREEN_HEIGHT / 2, NULL, 0, NULL, SDL_FLIP_NONE);
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

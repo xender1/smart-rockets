@@ -27,7 +27,10 @@
     <ClCompile Include="Rocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Genes.cpp">
+    <ClCompile Include="Gene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Population.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -44,7 +47,10 @@
     <ClInclude Include="Rocket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Genes.h">
+    <ClInclude Include="Gene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Population.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

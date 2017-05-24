@@ -8,14 +8,12 @@ using namespace std;
 #include <string>
 #include <cmath>
 #include <iostream>
+#include <sstream>
+#include <vector>
+#include <time.h>
 
-#include "Genes.h"
 #include "LTexture.h"
 #include "Dot.h"
-#include "Rocket.h"
-
-
-
 
 
 //Screen dimension constants

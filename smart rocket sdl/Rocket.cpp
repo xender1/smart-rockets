@@ -14,6 +14,21 @@ Rocket::Rocket(SDL_Renderer* gRenderer, string path)
 	mAccX = 0;
 	mAccY = 0;
 	mTexture.loadFromFile(gRenderer, path);
+
+	mStartTime = SDL_GetTicks();
+	mCurrTime = mStartTime;
+
+	mDnaCount = 0;
+
+	mAlive = true;
+
+	for (int i = 0; i < ROCKET_DNA_LENGTH; i++) {
+		Gene newGene;
+		newGene.randomize();
+		mDna.push_back(newGene);
+	}
+	mGene.randomize();
+
 }
 
 Rocket::~Rocket()
@@ -30,6 +45,7 @@ Rocket::~Rocket()
 	mAccX = 0;
 	mAccY = 0;
 	mTexture.free();
+	mDna.clear();
 }
 
 void Rocket::handleEvent(SDL_Event & e)
@@ -60,37 +76,84 @@ void Rocket::handleEvent(SDL_Event & e)
 	}
 }
 
+void Rocket::setVelocityFromDna()
+{
+	mCurrTime = (SDL_GetTicks() - mStartTime);
+	if (mCurrTime < mDna.at(mDnaCount).getTime()) {
+		mVelX = mDna.at(mDnaCount).getVelX();
+		mVelY = mDna.at(mDnaCount).getVelY();
+	}
+	else {
+		mStartTime = SDL_GetTicks();
+		mCurrTime = mStartTime;
+		mDnaCount++;
+	}
+	/*int i = 0;
+	for (it = mDna.begin(); it < mDna.end(); it++, i++) {
+		if (i == mDnaCount) {
+			cout << mStartTime << " " << mCurrTime << " " << it->getTime() << " ";
+			if (mCurrTime < it->getTime()) {
+				//mDna.at(i).randomize();
+				mVelX = it->getVelX();
+				mVelY = it->getVelY();
+			}
+			else {
+				mStartTime = SDL_GetTicks();
+				mCurrTime = mStartTime;
+				mDnaCount++;
+			}
+			break;
+		}
+	} */
+
+}
+
 void Rocket::move()
 {
-	mVelX += mAccX;
-	mVelY += mAccY;
-	if (mVelY > MAX_ROCKET_VEL) {
-		mVelY = MAX_ROCKET_VEL;
-	}
-	if (mVelY < -MAX_ROCKET_VEL) {
-		mVelY = -MAX_ROCKET_VEL;
-	}
-	if (mVelX > MAX_ROCKET_VEL) {
-		mVelX = MAX_ROCKET_VEL;
-	}
-	if (mVelX < -MAX_ROCKET_VEL) {
-		mVelX = -MAX_ROCKET_VEL;
-	}
+	//mVelX += mAccX;
+	//mVelY += mAccY;
+	if (mAlive) {
+		setVelocityFromDna();
+		//cout << mDnaCount << " " << mVelX << " " << mVelY << endl;
 
-	mPosX += mVelX;
-	mPosY += mVelY;
+		//mVelX = mGene.getVelX();
+		//mVelY = mGene.getVelY();
 
-	//move angle
-	double result = (atan2(mVelY, mVelX) * 180 / M_PI) + 90;
+		//cout << mGene.getVelX() << " " << mGene.getVelY() << " " << mGene.getTime() << endl;
 
-	if (mAngle < result) {
-		mAngle += ROCKET_ANGLE_VEL;
+		if (mVelY > MAX_ROCKET_VEL) {
+			mVelY = MAX_ROCKET_VEL;
+		}
+		if (mVelY < -MAX_ROCKET_VEL) {
+			mVelY = -MAX_ROCKET_VEL;
+		}
+		if (mVelX > MAX_ROCKET_VEL) {
+			mVelX = MAX_ROCKET_VEL;
+		}
+		if (mVelX < -MAX_ROCKET_VEL) {
+			mVelX = -MAX_ROCKET_VEL;
+		}
+
+		mPosX += mVelX;
+		mPosY += mVelY;
+
+		if (mPosX < 0 || mPosY < 0 || mPosX + mTexture.getWidth() > SCREEN_WIDTH || mPosY + mTexture.getHeight() > SCREEN_HEIGHT) {
+			mAlive = false;
+		}
+
+		//move angle
+		double result = (atan2(mVelY, mVelX) * 180 / M_PI) + 90;
+
+		if (mAngle < result) {
+			mAngle += ROCKET_ANGLE_VEL;
+		}
+		else if (mAngle > result) {
+			mAngle -= ROCKET_ANGLE_VEL;
+		}
+		mAngle = result;
+
+
 	}
-	else if (mAngle > result) {
-		mAngle -= ROCKET_ANGLE_VEL;
-	}
-	mAngle = result;
-
 	//cout << mPosX << "," << mPosY << " " << result << " " << mAngle << endl;
 }
 
