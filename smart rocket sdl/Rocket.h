@@ -11,7 +11,7 @@ public:
 	static const int ROCKET_WIDTH = 24;
 	static const int ROCKET_HEIGHT = 50;
 
-	static const int ROCKET_DNA_LENGTH = 200;
+	static const int ROCKET_DNA_LENGTH = 5;
 
 	//max acceleration and velocity rates
 	static constexpr double MAX_ROCKET_VEL = 3.0;
@@ -21,7 +21,7 @@ public:
 	static constexpr double ROCKET_ACC = 0.5;
 	
 	//speed of rotation
-	static constexpr double ROCKET_ANGLE_VEL = 50.0;
+	static constexpr double ROCKET_ANGLE_VEL = 5.0;
 
 	//Initializes the variables
 	Rocket(SDL_Renderer* gRenderer, string path);
@@ -32,16 +32,23 @@ public:
 
 	void setVelocityFromDna();
 
-	//Moves the dot
+	//Moves the rocket from dna
 	void move();
+
+	void checkCollision(SDL_Rect target);
+	bool calculateCollision(SDL_Rect A, SDL_Rect B);
 
 	//reinitializes rocket values
 	void recreate();
 
-	//Shows the dot on the screen
+	//Shows the rocket on the screen
 	void render(SDL_Renderer * gRenderer);
 
+	bool isComplete();
+	void calculateFitness(SDL_Rect target);
+
 	int getDnaCount();
+	double getFitnessScore();
 
 private:
 	//the texture for the rocket
@@ -72,5 +79,11 @@ private:
 	Uint32 mCurrTime;
 
 	bool mAlive;
+
+	SDL_Rect mMe;
+	bool mHitTarget;
+
+	//fitness score
+	double mFitness;
 
 };

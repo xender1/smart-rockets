@@ -15,7 +15,12 @@ Population::~Population()
 	{
 		delete *it;
 	}
+	for (vector<Rocket*>::const_iterator it = mMatePool.begin(); it != mMatePool.end(); ++it)
+	{
+		delete *it;
+	}
 	mPop.clear();
+	mMatePool.clear();
 }
 
 void Population::recreate(SDL_Renderer * gRenderer)
@@ -24,7 +29,12 @@ void Population::recreate(SDL_Renderer * gRenderer)
 	{
 		delete *it;
 	}
+	for (vector<Rocket*>::const_iterator it = mMatePool.begin(); it != mMatePool.end(); ++it)
+	{
+		delete *it;
+	}
 	mPop.clear();
+	mMatePool.clear();
 
 	for (int i = 0; i < mPopSize; i++) {
 		//Rocket* newRocket = new Rocket(gRenderer, "rocket_mini.png");
@@ -45,6 +55,56 @@ void Population::renderRockets(SDL_Renderer * gRenderer)
 	for (int i = 0; i < mPopSize; i++) {
 		mPop.at(i)->render(gRenderer);
 	}
+}
+
+void Population::checkCollision(SDL_Rect target)
+{
+	for (int i = 0; i < mPopSize; i++) {
+		mPop.at(i)->checkCollision(target);
+	}
+}
+
+bool Population::isComplete()
+{
+	int completeCount = 0;
+	for (int i = 0; i < mPopSize; i++) {
+		if (mPop.at(i)->isComplete()) {
+			completeCount++;
+		}
+	}
+	return completeCount == mPopSize;
+}
+
+void Population::evaluate(SDL_Rect target)
+{
+	for (int i = 0; i < mPopSize; i++) {
+		mPop.at(i)->calculateFitness(target);
+	}
+}
+
+void Population::createMatingPool(SDL_Renderer * gRenderer)
+{
+	for (int i = 0; i < mPopSize; i++) {
+		int inCount = mPop.at(i)->getFitnessScore() * 100;
+		for (int j = 0; j < inCount; j++) {
+			mMatePool.push_back(new Rocket(gRenderer, "rocket_mini.png"));
+		}
+	}
+}
+
+void Population::createNextGeneration()
+{
+	//get two random rockets
+
+	//crossover dna
+
+	//create new rocket from dna
+
+	for (vector<Rocket*>::const_iterator it = mMatePool.begin(); it != mMatePool.end(); ++it)
+	{
+		delete *it;
+	}
+	mMatePool.clear();
 }
 
 int Population::getPopSize()

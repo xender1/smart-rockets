@@ -190,12 +190,22 @@ int main(int argc, char* args[])
 					//dot.handleEvent(e);
 					//rocket.handleEvent(e);
 				}
-				//Set text to be rendered
+				//clear text
 				timeText.str("");
-				//timeText << SDL_GetTicks() - startTime;
-				//timeText.str(to_string(rocket.getDnaCount()));
-				timeText.str(to_string(myPop.getPopSize()));
 
+				//see if population has finished
+				if (myPop.isComplete()) {
+					timeText.str("Complete");
+					cout << "evaluating: " << endl;
+					myPop.evaluate(targetRect);
+					myPop.createMatingPool(gRenderer);
+					myPop.createNextGeneration();
+					//
+					//quit = true;
+				}
+				else {
+					timeText.str(to_string(myPop.getPopSize()));
+				}
 				//Render text
 				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
 				{
@@ -207,6 +217,7 @@ int main(int argc, char* args[])
 				//rocket.move();
 				//rocket2.move();
 				myPop.updateRockets();
+				myPop.checkCollision(targetRect);
 
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);

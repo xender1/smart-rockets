@@ -21,6 +21,8 @@ Rocket::Rocket(SDL_Renderer* gRenderer, string path)
 	mDnaCount = 0;
 
 	mAlive = true;
+	mHitTarget = false;
+	mFitness = 0.0;
 
 	for (int i = 0; i < ROCKET_DNA_LENGTH; i++) {
 		Gene newGene;
@@ -79,14 +81,21 @@ void Rocket::handleEvent(SDL_Event & e)
 void Rocket::setVelocityFromDna()
 {
 	mCurrTime = (SDL_GetTicks() - mStartTime);
-	if (mCurrTime < mDna.at(mDnaCount).getTime()) {
-		mVelX = mDna.at(mDnaCount).getVelX();
-		mVelY = mDna.at(mDnaCount).getVelY();
+	if (mDnaCount < ROCKET_DNA_LENGTH) {
+		if (mCurrTime < mDna.at(mDnaCount).getTime()) {
+			mVelX = mDna.at(mDnaCount).getVelX();
+			mVelY = mDna.at(mDnaCount).getVelY();
+		}
+		else {
+			mStartTime = SDL_GetTicks();
+			mCurrTime = mStartTime;
+			mDnaCount++;
+		}
 	}
 	else {
-		mStartTime = SDL_GetTicks();
-		mCurrTime = mStartTime;
-		mDnaCount++;
+		mVelX = 0;
+		mVelY = 0;
+		mAlive = false;
 	}
 	/*int i = 0;
 	for (it = mDna.begin(); it < mDna.end(); it++, i++) {
@@ -112,7 +121,7 @@ void Rocket::move()
 {
 	//mVelX += mAccX;
 	//mVelY += mAccY;
-	if (mAlive) {
+	if (mAlive && !mHitTarget) {
 		setVelocityFromDna();
 		//cout << mDnaCount << " " << mVelX << " " << mVelY << endl;
 
@@ -157,6 +166,60 @@ void Rocket::move()
 	//cout << mPosX << "," << mPosY << " " << result << " " << mAngle << endl;
 }
 
+void Rocket::checkCollision(SDL_Rect target)
+{
+	mMe.x = mPosX; mMe.y = mPosY;
+	mMe.w = mTexture.getWidth(); mMe.h = mTexture.getHeight();
+	if (calculateCollision(target, mMe)) {
+		mHitTarget = true;
+	}
+}
+
+bool Rocket::calculateCollision(SDL_Rect A, SDL_Rect B)
+{
+	//The sides of the rectangles
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	//Calculate the sides of rect A
+	leftA = A.x;
+	rightA = A.x + A.w;
+	topA = A.y;
+	bottomA = A.y + A.h;
+
+	//Calculate the sides of rect B
+	leftB = B.x;
+	rightB = B.x + B.w;
+	topB = B.y;
+	bottomB = B.y + B.h;
+
+	//If any of the sides from A are outside of B
+	if (bottomA <= topB)
+	{
+		return false;
+	}
+
+	if (topA >= bottomB)
+	{
+		return false;
+	}
+
+	if (rightA <= leftB)
+	{
+		return false;
+	}
+
+	if (leftA >= rightB)
+	{
+		return false;
+	}
+
+	//If none of the sides from A are outside B
+	return true;
+}
+
 void Rocket::recreate()
 {
 	mDna.clear();
@@ -179,6 +242,8 @@ void Rocket::recreate()
 	mDnaCount = 0;
 
 	mAlive = true;
+	mHitTarget = false;
+	mFitness = 0.0;
 
 	for (int i = 0; i < ROCKET_DNA_LENGTH; i++) {
 		Gene newGene;
@@ -193,8 +258,37 @@ void Rocket::render(SDL_Renderer * gRenderer)
 	mTexture.render(gRenderer, (int)mPosX, (int)mPosY, NULL, mAngle, NULL, SDL_FLIP_NONE);
 }
 
+bool Rocket::isComplete()
+{
+	return (!mAlive || mHitTarget);
+}
+
+void Rocket::calculateFitness(SDL_Rect target)
+{
+	double score = 0.0;
+
+	double dx = abs(target.x + target.w / 2) - (mPosX + mTexture.getWidth());
+	double dy = abs(target.y + target.h / 2) - (mPosY + mTexture.getHeight());
+	double distance = sqrt(pow(dx, 2) + pow(dy, 2));
+
+	score = 100*(1 / distance);
+
+	//subtract points if crashed into wall
+	if (!mAlive) score -= 0.2;
+	if (mHitTarget) score = 1.0;
+
+	mFitness = abs(score); //bad
+
+	cout << distance << " " << mFitness << endl;
+}
+
 int Rocket::getDnaCount()
 {
 	return mDnaCount;
+}
+
+double Rocket::getFitnessScore()
+{
+	return mFitness;
 }
 

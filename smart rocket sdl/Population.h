@@ -11,6 +11,16 @@ public:
 	void updateRockets();
 	void renderRockets(SDL_Renderer* gRenderer);
 
+	void checkCollision(SDL_Rect target);
+
+	bool isComplete();
+
+	//evaluates rocket population at end and sets rockets fitness scores based on target
+	void evaluate(SDL_Rect target);
+	//populates mating pool from fitness values of pop
+	void createMatingPool(SDL_Renderer * gRenderer);
+	void createNextGeneration();
+
 	int getPopSize();
 
 private:
@@ -18,5 +28,9 @@ private:
 	vector<Rocket*> mPop;
 	vector<Rocket*>::iterator it;
 
+	//mating pool
+	vector<Rocket*> mMatePool;
+
 	int mPopSize;
+	int mMatePoolSize;
 };
