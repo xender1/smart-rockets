@@ -2,7 +2,8 @@
 and may not be redistributed without written permission.*/
 
 #include "main.h"
-#include "Rocket.h"
+#include "Dot.h"
+#include "Population.h"
 
 
 //Starts up SDL and creates window
@@ -154,7 +155,10 @@ int main(int argc, char* args[])
 			Dot dot;
 
 			//test rocket creation
-			Rocket rocket(gRenderer, "rocket_mini.png");
+			//Rocket rocket(gRenderer, "rocket_mini.png");
+			//Rocket rocket2(gRenderer, "rocket_mini.png");
+
+			Population myPop(gRenderer, 15);
 
 			//Current time start time
 			Uint32 startTime = 0;
@@ -179,16 +183,19 @@ int main(int argc, char* args[])
 					else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
 					{
 						startTime = SDL_GetTicks();
-						rocket.recreate();
+						//rocket.recreate();
+						myPop.recreate(gRenderer);
 					}
 
 					//dot.handleEvent(e);
-					rocket.handleEvent(e);
+					//rocket.handleEvent(e);
 				}
 				//Set text to be rendered
 				timeText.str("");
-				timeText << SDL_GetTicks() - startTime;
-				timeText.str(to_string(rocket.getDnaCount()));
+				//timeText << SDL_GetTicks() - startTime;
+				//timeText.str(to_string(rocket.getDnaCount()));
+				timeText.str(to_string(myPop.getPopSize()));
+
 				//Render text
 				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
 				{
@@ -197,7 +204,9 @@ int main(int argc, char* args[])
 
 				//move the dot
 				dot.move();
-				rocket.move();
+				//rocket.move();
+				//rocket2.move();
+				myPop.updateRockets();
 
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
@@ -210,7 +219,9 @@ int main(int argc, char* args[])
 				SDL_RenderFillRect(gRenderer, &targetRect);
 
 				dot.render(gRenderer);
-				rocket.render(gRenderer);
+			//	rocket.render(gRenderer);
+			//	rocket2.render(gRenderer);
+				myPop.renderRockets(gRenderer);
 
 				gTimeTextTexture.render(gRenderer, 10, SCREEN_HEIGHT / 2, NULL, 0, NULL, SDL_FLIP_NONE);
 

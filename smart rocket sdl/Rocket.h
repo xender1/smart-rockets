@@ -1,5 +1,6 @@
 #pragma once
 #include "main.h"
+#include "LTexture.h"
 #include "Gene.h"
 
 //The rocket that will move around the screen
