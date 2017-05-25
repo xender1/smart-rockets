@@ -2,6 +2,7 @@
 #include <SDL.h>
 #include <cmath>
 
+
 class Gene
 {
 public:
@@ -9,9 +10,12 @@ public:
 	static constexpr double MAX_GENE_VELOCITY = 3.0;
 
 	Gene();
+	Gene(double velX, double velY, Uint32 time);
 	~Gene();
 
 	void randomize(); 
+
+	Gene crossover(Gene geneA, Gene geneB);
 
 	double getVelX();
 	double getVelY();

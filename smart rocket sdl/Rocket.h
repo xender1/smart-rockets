@@ -11,7 +11,7 @@ public:
 	static const int ROCKET_WIDTH = 24;
 	static const int ROCKET_HEIGHT = 50;
 
-	static const int ROCKET_DNA_LENGTH = 5;
+	static const int ROCKET_DNA_LENGTH = 10;
 
 	//max acceleration and velocity rates
 	static constexpr double MAX_ROCKET_VEL = 3.0;
@@ -23,8 +23,10 @@ public:
 	//speed of rotation
 	static constexpr double ROCKET_ANGLE_VEL = 5.0;
 
-	//Initializes the variables
+	//create rocket with random genes
 	Rocket(SDL_Renderer* gRenderer, string path);
+	//create rocket with given genes
+	Rocket(SDL_Renderer* gRenderer, string path, vector<Gene> genes);
 
 	~Rocket();
 
@@ -45,8 +47,10 @@ public:
 	void render(SDL_Renderer * gRenderer);
 
 	bool isComplete();
-	void calculateFitness(SDL_Rect target);
+	bool getHitTarget() { return mHitTarget; }
+	double calculateFitness(SDL_Rect target);
 
+	vector<Gene> getDna();
 	int getDnaCount();
 	double getFitnessScore();
 

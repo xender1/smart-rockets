@@ -19,9 +19,13 @@ public:
 	void evaluate(SDL_Rect target);
 	//populates mating pool from fitness values of pop
 	void createMatingPool(SDL_Renderer * gRenderer);
-	void createNextGeneration();
+	void createNextGeneration(SDL_Renderer * gRenderer);
 
 	int getPopSize();
+	double getMaxFitScore() { return mMaxFit; }
+	int getGenerationNum() { return mGenNum; }
+
+	vector<Rocket*> getPopluation();
 
 private:
 	//will have vector of rockets but right now we start with one.
@@ -33,4 +37,7 @@ private:
 
 	int mPopSize;
 	int mMatePoolSize;
+
+	double mMaxFit;
+	int mGenNum;
 };

@@ -21,8 +21,12 @@ public:
 	//Moves the dot
 	void move();
 
+	void calculateDistance(SDL_Rect target);
+
 	//Shows the dot on the screen
 	void render(SDL_Renderer* gRenderer);
+
+	double getDistance() { return mDist; }
 
 private:
 	//the rectangle for the dot
@@ -33,4 +37,6 @@ private:
 
 	//The velocity of the dot
 	int mVelX, mVelY;
+
+	double mDist;
 };

@@ -187,7 +187,7 @@ int main(int argc, char* args[])
 						myPop.recreate(gRenderer);
 					}
 
-					//dot.handleEvent(e);
+					dot.handleEvent(e);
 					//rocket.handleEvent(e);
 				}
 				//clear text
@@ -199,12 +199,17 @@ int main(int argc, char* args[])
 					cout << "evaluating: " << endl;
 					myPop.evaluate(targetRect);
 					myPop.createMatingPool(gRenderer);
-					myPop.createNextGeneration();
+					myPop.createNextGeneration(gRenderer);
 					//
 					//quit = true;
 				}
 				else {
-					timeText.str(to_string(myPop.getPopSize()));
+					timeText << to_string(dot.getDistance()) << " " << to_string(100 * (1 / dot.getDistance()));
+					//timeText << to_string(myPop.getPopluation().at(0)->getDnaCount());
+					//timeText << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getVelX());
+					//timeText << " " << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getVelY());
+					//timeText << " " << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getTime());
+					//timeText.str(to_string(myPop.getPopSize()));
 				}
 				//Render text
 				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
@@ -214,6 +219,7 @@ int main(int argc, char* args[])
 
 				//move the dot
 				dot.move();
+				dot.calculateDistance(targetRect);
 				//rocket.move();
 				//rocket2.move();
 				myPop.updateRockets();

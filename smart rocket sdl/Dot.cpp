@@ -69,6 +69,15 @@ void Dot::move()
 	mDot.y = mPosY;
 }
 
+void Dot::calculateDistance(SDL_Rect target)
+{
+	double dx = abs(target.x + target.w / 2) - (mPosX + mDot.w);
+	double dy = abs(target.y + target.h / 2) - (mPosY + mDot.h);
+	double distance = sqrt(pow(dx, 2) + pow(dy, 2));
+
+	mDist = distance;
+}
+
 void Dot::render(SDL_Renderer* gRenderer)
 {
 	//Show the dot

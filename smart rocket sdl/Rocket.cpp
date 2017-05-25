@@ -33,6 +33,46 @@ Rocket::Rocket(SDL_Renderer* gRenderer, string path)
 
 }
 
+Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
+{
+	//Initialize the offsets
+	mPosX = SCREEN_WIDTH / 2;
+	mPosY = SCREEN_HEIGHT / 2;
+
+	//Initialize the velocity
+	mVelX = 0.0;
+	mVelY = 0.0;
+	mVelA = 0.0;
+	mAngle = 0.0;
+	mAccX = 0;
+	mAccY = 0;
+	mTexture.loadFromFile(gRenderer, path);
+
+	mStartTime = SDL_GetTicks();
+	mCurrTime = mStartTime;
+
+	mDnaCount = 0;
+
+	mAlive = true;
+	mHitTarget = false;
+	mFitness = 0.0;
+
+	mDna.clear();
+	//for (vector<Gene>::const_iterator it = genes.begin(); it != genes.end(); ++it)
+	for (int i=0; i<genes.size(); i++)
+	{
+		//Gene newGene = genes[i];
+		//mDna.push_back(*it);
+		mDna.push_back(genes[i]);
+	}
+
+	//for (int i = 0; i < genes.size(); i++) {
+	//	Gene newGene;
+	//	newGene.randomize();
+	//	mDna.push_back(newGene);
+	//}
+}
+
 Rocket::~Rocket()
 {
 	//Initialize the offsets
@@ -263,7 +303,7 @@ bool Rocket::isComplete()
 	return (!mAlive || mHitTarget);
 }
 
-void Rocket::calculateFitness(SDL_Rect target)
+double Rocket::calculateFitness(SDL_Rect target)
 {
 	double score = 0.0;
 
@@ -272,14 +312,23 @@ void Rocket::calculateFitness(SDL_Rect target)
 	double distance = sqrt(pow(dx, 2) + pow(dy, 2));
 
 	score = 100*(1 / distance);
+	if (distance <= 100) { score = 1.0; }
 
 	//subtract points if crashed into wall
-	if (!mAlive) score -= 0.2;
-	if (mHitTarget) score = 1.0;
+	if (!mAlive) score -= 0.3;
+	if (mHitTarget) score = 3.0;
 
-	mFitness = abs(score); //bad
+	if (score <= 0.0) { score = 0.1; }
+	mFitness = score; //bad
 
 	cout << distance << " " << mFitness << endl;
+
+	return mFitness;
+}
+
+vector<Gene> Rocket::getDna()
+{
+	return mDna;
 }
 
 int Rocket::getDnaCount()
