@@ -100,7 +100,7 @@ void Population::createMatingPool(SDL_Renderer * gRenderer)
 		if (mPop.at(i)->getHitTarget()) { inCount += 200; }
 		cout << mPop.at(i)->getFitnessScore() << " " << inCount << endl;
 		for (int j = 0; j < inCount; j++) {
-			mMatePool.push_back(new Rocket(gRenderer, "rocket_mini.png", mPop[i]->getDna()));
+			mMatePool.push_back(new Rocket(mPop[i]->getDna()));
 		}
 	}
 }
@@ -118,10 +118,8 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 
 	for (int i = 0; i < mPopSize; i++) {
 		//get two random rockets dna from mating pool
-		int index = rand() % mMatePool.size();
-		vector<Gene> parentA = mMatePool[index]->getDna();
-		index = rand() % mMatePool.size();
-		vector<Gene> parentB = mMatePool[index]->getDna();
+		vector<Gene> parentA = mMatePool[rand() % mMatePool.size()]->getDna();
+		vector<Gene> parentB = mMatePool[rand() % mMatePool.size()]->getDna();
 
 		vector<Gene> newDna;
 		
@@ -137,7 +135,6 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 			}
 			else {
 				Gene newGene(parentB[j].getVelX(), parentB[j].getVelY(), parentB[j].getTime());
-			//Gene newGene(parentA[j].getVelX(), parentA[j].getVelY(), parentA[j].getTime());
 				newDna.push_back(newGene);
 			}
 		}

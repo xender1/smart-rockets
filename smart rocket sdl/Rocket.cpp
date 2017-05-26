@@ -73,6 +73,14 @@ Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
 	//}
 }
 
+Rocket::Rocket(vector<Gene> genes)
+{
+	for (int i = 0; i<genes.size(); i++)
+	{
+		mDna.push_back(genes[i]);
+	}
+}
+
 Rocket::~Rocket()
 {
 	//Initialize the offsets
@@ -316,7 +324,10 @@ double Rocket::calculateFitness(SDL_Rect target)
 
 	//subtract points if crashed into wall
 	if (!mAlive) score -= 0.3;
-	if (mHitTarget) score = 3.0;
+	if (mHitTarget) score = 2.0;
+	
+	//something with calculating total time it took to hit target or genes used
+
 
 	if (score <= 0.0) { score = 0.1; }
 	mFitness = score; //bad

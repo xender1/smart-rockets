@@ -27,6 +27,8 @@ public:
 	Rocket(SDL_Renderer* gRenderer, string path);
 	//create rocket with given genes
 	Rocket(SDL_Renderer* gRenderer, string path, vector<Gene> genes);
+	//create rocket with genes (used in mating pool does not load textures only uses genes)
+	Rocket(vector<Gene> genes);
 
 	~Rocket();
 
