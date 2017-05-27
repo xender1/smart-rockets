@@ -1,7 +1,6 @@
 #include "main.h"
 #include "Dot.h"
 #include "Population.h"
-//#include "CollisionObject.h"
 
 
 //Starts up SDL and creates window
@@ -152,19 +151,14 @@ int main(int argc, char* args[])
 			targetRect.w = 30; targetRect.h = 30;
 			targetRect.x = SCREEN_WIDTH / 2 - targetRect.w / 2;
 			targetRect.y = 60;
-			
-			//blocking rectangle
-			SDL_Rect obstacleRect;
-			obstacleRect.w = 350; obstacleRect.h = 20;
-			obstacleRect.x = SCREEN_WIDTH / 2 - obstacleRect.w / 2; 
-			obstacleRect.y = SCREEN_HEIGHT / 2 - 10;
 
 			vector<CollisionObject*> collisionObjects;
 
-			//target
-			collisionObjects.push_back(new CollisionObject(30, 30, SCREEN_WIDTH / 2 - targetRect.w / 2, 60, true));
-			//wall
-			collisionObjects.push_back(new CollisionObject(350, 20, SCREEN_WIDTH / 2 - obstacleRect.w / 2, SCREEN_HEIGHT / 2 - 10, false));
+			//add target to collision objects
+			collisionObjects.push_back(new CollisionObject(targetRect, true));
+
+			//create a wall
+			collisionObjects.push_back(new CollisionObject(350, 20, SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT / 2 - 10, false));
 			
 			//my test movement dot
 			Dot dot;
@@ -211,8 +205,6 @@ int main(int argc, char* args[])
 					myPop.evaluate(targetRect);
 					myPop.createMatingPool(gRenderer);
 					myPop.createNextGeneration(gRenderer);
-					//
-					//quit = true;
 				}
 				else {
 					//timeText << to_string(dot.getDistance()) << " " << to_string(100 * (1 / dot.getDistance()));
@@ -239,17 +231,10 @@ int main(int argc, char* args[])
 				for (vector<CollisionObject*>::const_iterator it = collisionObjects.begin(); it != collisionObjects.end(); ++it) {
 					(*it)->render(gRenderer);
 				}
-
-				//target
-				//SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-				//SDL_RenderFillRect(gRenderer, &targetRect);
-
-				//obstacle 
-				//SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-				//SDL_RenderFillRect(gRenderer, &obstacleRect);
-
-				dot.render(gRenderer);
+				
+				//render rockets in popluation
 				myPop.renderRockets(gRenderer);
+				dot.render(gRenderer);
 
 				gTextTexture.render(gRenderer, 10, SCREEN_HEIGHT - gTextTexture.getHeight()*2, NULL, 0, NULL, SDL_FLIP_NONE);
 

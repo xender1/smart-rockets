@@ -10,6 +10,12 @@ CollisionObject::CollisionObject(int w, int h, int x, int y, bool isTarget)
 
 }
 
+CollisionObject::CollisionObject(SDL_Rect rect, bool isTarget)
+{
+	mObject = rect;
+	mIsTarget = isTarget;
+}
+
 
 CollisionObject::~CollisionObject()
 {

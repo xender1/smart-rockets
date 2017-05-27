@@ -1,10 +1,11 @@
 #pragma once
-#include "main.h"
+#include <SDL.h>
 
 class CollisionObject
 {
 public:
 	CollisionObject(int w, int h, int x, int y, bool isTarget);
+	CollisionObject(SDL_Rect rect, bool isTarget);
 	~CollisionObject();
 
 	//Shows the rectangle on the screen
