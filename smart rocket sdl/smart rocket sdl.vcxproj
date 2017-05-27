@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CollisionObject.cpp" />
     <ClCompile Include="Dot.cpp" />
     <ClCompile Include="Gene.cpp" />
     <ClCompile Include="LTexture.cpp" />
@@ -148,6 +149,7 @@
     <ClCompile Include="Rocket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CollisionObject.h" />
     <ClInclude Include="Dot.h" />
     <ClInclude Include="Gene.h" />
     <ClInclude Include="LTexture.h" />

@@ -8,10 +8,8 @@ public:
 
 	void recreate(SDL_Renderer* gRenderer);
 
-	void updateRockets();
+	void updateRockets(vector<CollisionObject*> collisionObjects);
 	void renderRockets(SDL_Renderer* gRenderer);
-
-	void checkCollision(SDL_Rect target);
 
 	bool isComplete();
 
@@ -32,7 +30,7 @@ private:
 	vector<Rocket*> mPop;
 	vector<Rocket*>::iterator it;
 
-	//mating pool
+	//mating pool (should just use vector of ints that store index of rocket to use from pop
 	vector<Rocket*> mMatePool;
 
 	int mPopSize;

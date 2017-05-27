@@ -4,7 +4,6 @@ Population::Population(SDL_Renderer * gRenderer, int popSize)
 {
 	mPopSize = popSize;
 	for (int i = 0; i < mPopSize; i++) {
-		//Rocket* newRocket = new Rocket(gRenderer, "rocket_mini.png");
 		mPop.push_back(new Rocket(gRenderer, "rocket_mini.png"));
 	}
 	mGenNum = 0; mMaxFit = 0;
@@ -40,22 +39,20 @@ void Population::recreate(SDL_Renderer * gRenderer)
 	mMatePool.clear();
 
 	for (int i = 0; i < mPopSize; i++) {
-		//Rocket* newRocket = new Rocket(gRenderer, "rocket_mini.png");
 		vector<Gene> newDna;
 		for (int j = 0; j < 5; j++) {
 			Gene newGene(0, -3, 3000);
 			newDna.push_back(newGene);
 		}
-		//mPop.push_back(new Rocket(gRenderer, "rocket_mini.png"));
 		mPop.push_back(new Rocket(gRenderer, "rocket_mini.png", newDna));
 	}
 }
 
-void Population::updateRockets()
+void Population::updateRockets(vector<CollisionObject*> collisionObjects)
 {
 	for (int i = 0; i < mPopSize; i++) {
 		//Rocket* rocket = mPop.at(i);
-		mPop.at(i)->move();
+		mPop.at(i)->move(collisionObjects);
 	}
 }
 
@@ -63,13 +60,6 @@ void Population::renderRockets(SDL_Renderer * gRenderer)
 {
 	for (int i = 0; i < mPopSize; i++) {
 		mPop.at(i)->render(gRenderer);
-	}
-}
-
-void Population::checkCollision(SDL_Rect target)
-{
-	for (int i = 0; i < mPopSize; i++) {
-		mPop.at(i)->checkCollision(target);
 	}
 }
 

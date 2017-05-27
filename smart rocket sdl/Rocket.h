@@ -2,14 +2,16 @@
 #include "main.h"
 #include "LTexture.h"
 #include "Gene.h"
+#include "CollisionObject.h"
 
 //The rocket that will move around the screen
 class Rocket
 {
 public:
 	//The dimensions of the rocket
-	static const int ROCKET_WIDTH = 24;
-	static const int ROCKET_HEIGHT = 50;
+	//  Pulls from LTexture mTexture now
+	//static const int ROCKET_WIDTH = 24;
+	//static const int ROCKET_HEIGHT = 50;
 
 	static const int ROCKET_DNA_LENGTH = 10;
 
@@ -37,9 +39,9 @@ public:
 	void setVelocityFromDna();
 
 	//Moves the rocket from dna
-	void move();
+	void move(vector<CollisionObject*> collisionObjects);
 
-	void checkCollision(SDL_Rect target);
+	bool checkCollision(vector<CollisionObject*> collisionObjects);
 	bool calculateCollision(SDL_Rect A, SDL_Rect B);
 
 	//reinitializes rocket values
@@ -60,7 +62,6 @@ private:
 	//the texture for the rocket
 	LTexture mTexture;
 
-	Gene mGene;
 	vector<Gene> mDna;
 	vector<Gene>::iterator it;
 
@@ -86,6 +87,7 @@ private:
 
 	bool mAlive;
 
+	//simple hit detection box
 	SDL_Rect mMe;
 	bool mHitTarget;
 

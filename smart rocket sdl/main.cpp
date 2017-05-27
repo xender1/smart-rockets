@@ -1,9 +1,7 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2015)
-and may not be redistributed without written permission.*/
-
 #include "main.h"
 #include "Dot.h"
 #include "Population.h"
+//#include "CollisionObject.h"
 
 
 //Starts up SDL and creates window
@@ -24,9 +22,8 @@ SDL_Renderer* gRenderer = NULL;
 //Globally used font
 TTF_Font *gFont = NULL;
 
-
-//Scene textures
-LTexture gTimeTextTexture;
+//Text texture
+LTexture gTextTexture;
 
 bool init()
 {
@@ -112,7 +109,7 @@ void close()
 	TTF_CloseFont(gFont);
 	gFont = NULL;
 
-	gTimeTextTexture.free();
+	gTextTexture.free();
 
 	//Destroy window	
 	SDL_DestroyRenderer(gRenderer);
@@ -151,14 +148,29 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//target rectangle
-			SDL_Rect targetRect{ SCREEN_WIDTH / 2, 60, 30, 30 };
+			SDL_Rect targetRect;
+			targetRect.w = 30; targetRect.h = 30;
+			targetRect.x = SCREEN_WIDTH / 2 - targetRect.w / 2;
+			targetRect.y = 60;
+			
+			//blocking rectangle
+			SDL_Rect obstacleRect;
+			obstacleRect.w = 350; obstacleRect.h = 20;
+			obstacleRect.x = SCREEN_WIDTH / 2 - obstacleRect.w / 2; 
+			obstacleRect.y = SCREEN_HEIGHT / 2 - 10;
+
+			vector<CollisionObject*> collisionObjects;
+
+			//target
+			collisionObjects.push_back(new CollisionObject(30, 30, SCREEN_WIDTH / 2 - targetRect.w / 2, 60, true));
+			//wall
+			collisionObjects.push_back(new CollisionObject(350, 20, SCREEN_WIDTH / 2 - obstacleRect.w / 2, SCREEN_HEIGHT / 2 - 10, false));
+			
+			//my test movement dot
 			Dot dot;
 
-			//test rocket creation
-			//Rocket rocket(gRenderer, "rocket_mini.png");
-			//Rocket rocket2(gRenderer, "rocket_mini.png");
-
-			Population myPop(gRenderer, 15);
+			//Population of rockets
+			Population myPop(gRenderer, 100);
 
 			//Current time start time
 			Uint32 startTime = 0;
@@ -166,6 +178,7 @@ int main(int argc, char* args[])
 			//Set text color as black
 			SDL_Color textColor = { 0, 0, 0, 255 };
 
+			//stores text to render to screen
 			stringstream timeText;
 
 			//While application is running
@@ -183,12 +196,10 @@ int main(int argc, char* args[])
 					else if (e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_RETURN)
 					{
 						startTime = SDL_GetTicks();
-						//rocket.recreate();
 						myPop.recreate(gRenderer);
 					}
 
 					dot.handleEvent(e);
-					//rocket.handleEvent(e);
 				}
 				//clear text
 				timeText.str("");
@@ -204,15 +215,11 @@ int main(int argc, char* args[])
 					//quit = true;
 				}
 				else {
-					timeText << to_string(dot.getDistance()) << " " << to_string(100 * (1 / dot.getDistance()));
-					//timeText << to_string(myPop.getPopluation().at(0)->getDnaCount());
-					//timeText << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getVelX());
-					//timeText << " " << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getVelY());
-					//timeText << " " << to_string(myPop.getPopluation().at(0)->getDna().at(myPop.getPopluation().at(0)->getDnaCount()).getTime());
-					//timeText.str(to_string(myPop.getPopSize()));
+					//timeText << to_string(dot.getDistance()) << " " << to_string(100 * (1 / dot.getDistance()));
+					timeText << to_string(myPop.getGenerationNum()) << " " << to_string(myPop.getMaxFitScore());
 				}
 				//Render text
-				if (!gTimeTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
+				if (!gTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
 				{
 					printf("Unable to render time texture!\n");
 				}
@@ -220,27 +227,31 @@ int main(int argc, char* args[])
 				//move the dot
 				dot.move();
 				dot.calculateDistance(targetRect);
-				//rocket.move();
-				//rocket2.move();
-				myPop.updateRockets();
-				myPop.checkCollision(targetRect);
+
+				myPop.updateRockets(collisionObjects);
 
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
 
-				//Render objects
+				//Render collision objects
+				for (vector<CollisionObject*>::const_iterator it = collisionObjects.begin(); it != collisionObjects.end(); ++it) {
+					(*it)->render(gRenderer);
+				}
+
 				//target
-				SDL_SetRenderDrawColor(gRenderer, 0x00, 0xFF, 0xFF, 0xFF);
-				SDL_RenderFillRect(gRenderer, &targetRect);
+				//SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				//SDL_RenderFillRect(gRenderer, &targetRect);
+
+				//obstacle 
+				//SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+				//SDL_RenderFillRect(gRenderer, &obstacleRect);
 
 				dot.render(gRenderer);
-			//	rocket.render(gRenderer);
-			//	rocket2.render(gRenderer);
 				myPop.renderRockets(gRenderer);
 
-				gTimeTextTexture.render(gRenderer, 10, SCREEN_HEIGHT / 2, NULL, 0, NULL, SDL_FLIP_NONE);
+				gTextTexture.render(gRenderer, 10, SCREEN_HEIGHT - gTextTexture.getHeight()*2, NULL, 0, NULL, SDL_FLIP_NONE);
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);
