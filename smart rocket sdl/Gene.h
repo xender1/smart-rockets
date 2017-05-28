@@ -1,23 +1,16 @@
 #pragma once
-#include <SDL.h>
-#include <cmath>
+#include "main.h"
 
 
 class Gene
 {
 public:
-	static constexpr double MIN_GENE_VELOCITY = -3.0;
-	static constexpr double MAX_GENE_VELOCITY = 3.0;
-
-	static const int MAX_GENE_TIME = 3000;
-
 	Gene();
 	Gene(double velX, double velY, Uint32 time);
 	~Gene();
 
+	void setGeneValues(double velX, double velY, Uint32 time);
 	void randomize(); 
-
-	Gene crossover(Gene geneA, Gene geneB);
 
 	double getVelX();
 	double getVelY();

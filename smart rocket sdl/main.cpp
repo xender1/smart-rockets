@@ -201,7 +201,6 @@ int main(int argc, char* args[])
 				//see if population has finished
 				if (myPop.isComplete()) {
 					timeText.str("Complete");
-					cout << "evaluating: " << endl;
 					myPop.evaluate(targetRect);
 					myPop.createMatingPool(gRenderer);
 					myPop.createNextGeneration(gRenderer);

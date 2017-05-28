@@ -88,7 +88,7 @@ void Population::createMatingPool(SDL_Renderer * gRenderer)
 	for (int i = 0; i < mPopSize; i++) {
 		int inCount = mPop.at(i)->getFitnessScore() * 100;
 		if (mPop.at(i)->getHitTarget()) { inCount += 200; }
-		cout << mPop.at(i)->getFitnessScore() << " " << inCount << endl;
+		//cout << mPop.at(i)->getFitnessScore() << " " << inCount << endl;
 		for (int j = 0; j < inCount; j++) {
 			mMatePool.push_back(new Rocket(mPop[i]->getDna()));
 		}
@@ -118,19 +118,29 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 		for (int j = 0; j < parentA.size(); j++) {
 			//Gene newGene((parentA[j].getVelX() + parentB[j].getVelX()) / 2, (parentA[j].getVelY() + parentB[j].getVelY()) / 2,
 			//	(parentA[j].getTime() + parentB[j].getTime()) / 2);
-			
+			Gene newGene;
 			if (j > midPoint) {
-				Gene newGene(parentA[j].getVelX(), parentA[j].getVelY(), parentA[j].getTime());
-				newDna.push_back(newGene);
+				newGene.setGeneValues(parentA[j].getVelX(), parentA[j].getVelY(), parentA[j].getTime());
 			}
 			else {
-				Gene newGene(parentB[j].getVelX(), parentB[j].getVelY(), parentB[j].getTime());
-				newDna.push_back(newGene);
+				newGene.setGeneValues(parentB[j].getVelX(), parentB[j].getVelY(), parentB[j].getTime());
 			}
-		}
-		//create new rocket from dna in population
-		mPop.push_back(new Rocket(gRenderer, "rocket_mini.png", newDna));
+			//chance gene is brand new
+			if (rand() % 100 < MUTATION_SINGLE_GENE_CHANCE) {
+				newGene.randomize();
+				cout << "mutation of single gene" << endl;
+			}
 
+			newDna.push_back(newGene);
+		}
+		//create new rocket from dna in population, chance brand new dna is created
+		if (rand() % 100 < MUTATION_DNA_SEQUENCE_CHANCE) {
+			cout << "mutation of entire gene sequence" << endl;
+			mPop.push_back(new Rocket(gRenderer, "rocket_mini.png"));
+		}
+		else {
+			mPop.push_back(new Rocket(gRenderer, "rocket_mini.png", newDna));
+		}
 	}
 
 	for (vector<Rocket*>::const_iterator it = mMatePool.begin(); it != mMatePool.end(); ++it)

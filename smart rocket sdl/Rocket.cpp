@@ -14,7 +14,7 @@ Rocket::Rocket(SDL_Renderer* gRenderer, string path)
 	mAccX = 0;
 	mAccY = 0;
 	mTexture.loadFromFile(gRenderer, path);
-	mTexture.setAlpha(180);
+	mTexture.setAlpha(170);
 
 	mStartTime = SDL_GetTicks();
 	mCurrTime = mStartTime;
@@ -48,7 +48,7 @@ Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
 	mAccX = 0;
 	mAccY = 0;
 	mTexture.loadFromFile(gRenderer, path);
-	mTexture.setAlpha(180);
+	mTexture.setAlpha(170);
 
 	mStartTime = SDL_GetTicks();
 	mCurrTime = mStartTime;
@@ -315,7 +315,7 @@ double Rocket::calculateFitness(SDL_Rect target)
 	if (score <= 0.0) { score = 0.1; }
 	mFitness = score; //bad
 
-	cout << distance << " " << mFitness << endl;
+	//cout << distance << " " << mFitness << endl;
 
 	return mFitness;
 }

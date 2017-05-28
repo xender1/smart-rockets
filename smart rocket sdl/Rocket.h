@@ -8,17 +8,6 @@
 class Rocket
 {
 public:
-	//The dimensions of the rocket
-	//  Pulls from LTexture mTexture now
-	//static const int ROCKET_WIDTH = 24;
-	//static const int ROCKET_HEIGHT = 50;
-
-	static const int ROCKET_DNA_LENGTH = 10;
-
-	//max acceleration and velocity rates
-	static constexpr double MAX_ROCKET_VEL = 3.0;
-	static constexpr double MAX_ROCKET_ACC = 2.0;
-
 	//acceleration
 	static constexpr double ROCKET_ACC = 0.5;
 	
@@ -44,7 +33,7 @@ public:
 	bool checkCollision(vector<CollisionObject*> collisionObjects);
 	bool calculateCollision(SDL_Rect A, SDL_Rect B);
 
-	//reinitializes rocket values
+	//reinitializes rocket values and sets genes
 	void recreate();
 
 	//Shows the rocket on the screen
