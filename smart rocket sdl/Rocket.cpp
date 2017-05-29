@@ -252,7 +252,7 @@ bool Rocket::calculateCollision(SDL_Rect A, SDL_Rect B)
 	return false;
 }
 
-void Rocket::recreate()
+void Rocket::recreate(vector<Gene> genes)
 {
 	mDna.clear();
 
@@ -277,10 +277,9 @@ void Rocket::recreate()
 	mHitTarget = false;
 	mFitness = 0.0;
 
-	for (int i = 0; i < ROCKET_DNA_LENGTH; i++) {
-		Gene newGene;
-		newGene.randomize();
-		mDna.push_back(newGene);
+	for (int i = 0; i<genes.size(); i++)
+	{
+		mDna.push_back(genes[i]);
 	}
 }
 

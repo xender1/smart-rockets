@@ -76,7 +76,7 @@ bool Population::isComplete()
 
 void Population::evaluate(SDL_Rect target)
 {
-	int currFit = 0;
+	double currFit = 0.0;
 	for (int i = 0; i < mPopSize; i++) {
 		currFit = mPop.at(i)->calculateFitness(target);
 		if (currFit > mMaxFit) { mMaxFit = currFit; }
@@ -86,7 +86,7 @@ void Population::evaluate(SDL_Rect target)
 void Population::createMatingPool(SDL_Renderer * gRenderer)
 {
 	for (int i = 0; i < mPopSize; i++) {
-		int inCount = mPop.at(i)->getFitnessScore() * 100;
+		int inCount = (int)mPop.at(i)->getFitnessScore() * 100;
 		if (mPop.at(i)->getHitTarget()) { inCount += 200; }
 		//cout << mPop.at(i)->getFitnessScore() << " " << inCount << endl;
 		for (int j = 0; j < inCount; j++) {
@@ -100,11 +100,11 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 
 	mGenNum++;
 
-	for (vector<Rocket*>::const_iterator it = mPop.begin(); it != mPop.end(); ++it)
-	{
-		delete *it;
-	}
-	mPop.clear();
+	//for (vector<Rocket*>::const_iterator it = mPop.begin(); it != mPop.end(); ++it)
+	//{
+	//	delete *it;
+	//}
+	//mPop.clear();
 
 	for (int i = 0; i < mPopSize; i++) {
 		//get two random rockets dna from mating pool
@@ -136,10 +136,10 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 		//create new rocket from dna in population, chance brand new dna is created
 		if (rand() % 100 < MUTATION_DNA_SEQUENCE_CHANCE) {
 			cout << "mutation of entire gene sequence" << endl;
-			mPop.push_back(new Rocket(gRenderer, "rocket_mini.png"));
+			mPop[i]->recreate(newDna);
 		}
 		else {
-			mPop.push_back(new Rocket(gRenderer, "rocket_mini.png", newDna));
+			mPop[i]->recreate(newDna);
 		}
 	}
 

@@ -34,7 +34,7 @@ public:
 	bool calculateCollision(SDL_Rect A, SDL_Rect B);
 
 	//reinitializes rocket values and sets genes
-	void recreate();
+	void recreate(vector<Gene> genes);
 
 	//Shows the rocket on the screen
 	void render(SDL_Renderer * gRenderer);

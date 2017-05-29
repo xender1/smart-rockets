@@ -1,5 +1,5 @@
 #include "main.h"
-#include "Dot.h"
+#include "SimpleRect.h"
 #include "Population.h"
 
 
@@ -161,7 +161,7 @@ int main(int argc, char* args[])
 			collisionObjects.push_back(new CollisionObject(350, 20, SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT / 2 - 10, false));
 			
 			//my test movement dot
-			Dot dot;
+			SimpleRect myRect(gRenderer, "rectangle.png");
 
 			//Population of rockets
 			Population myPop(gRenderer, 100);
@@ -193,7 +193,7 @@ int main(int argc, char* args[])
 						myPop.recreate(gRenderer);
 					}
 
-					dot.handleEvent(e);
+					myRect.handleEvent(e);
 				}
 				//clear text
 				timeText.str("");
@@ -216,8 +216,8 @@ int main(int argc, char* args[])
 				}
 
 				//move the dot
-				dot.move();
-				dot.calculateDistance(targetRect);
+				myRect.move();
+				//dot.calculateDistance(targetRect);
 
 				myPop.updateRockets(collisionObjects);
 
@@ -233,7 +233,7 @@ int main(int argc, char* args[])
 				
 				//render rockets in popluation
 				myPop.renderRockets(gRenderer);
-				dot.render(gRenderer);
+				myRect.render(gRenderer);
 
 				gTextTexture.render(gRenderer, 10, SCREEN_HEIGHT - gTextTexture.getHeight()*2, NULL, 0, NULL, SDL_FLIP_NONE);
 

@@ -1,20 +1,31 @@
-#include "Dot.h"
+#include "SimpleRect.h"
 
-Dot::Dot()
+SimpleRect::SimpleRect(SDL_Renderer* gRenderer, string path)
 {
 	//Initialize the offsets
 	mPosX = SCREEN_WIDTH / 2;
 	mPosY = SCREEN_HEIGHT - 100;
 
 	//Initialize the velocity
-	mVelX = 0;
-	mVelY = 0;
+	mVelX = 0.0;
+	mVelY = 0.0;
+	mAccX = 0.0;
+	mAccY = 0.0;
+
+	mAngle = 0.0;
+
+	mTexture.loadFromFile(gRenderer, path);
 
 	mDot.w = DOT_WIDTH; mDot.h = DOT_HEIGHT;
 	mDot.x = mPosX; mDot.y = mPosY + mDot.h;
 }
 
-void Dot::handleEvent(SDL_Event& e)
+SimpleRect::~SimpleRect()
+{
+	mTexture.free();
+}
+
+void SimpleRect::handleEvent(SDL_Event& e)
 {
 	//If a key was pressed
 	if (e.type == SDL_KEYDOWN && e.key.repeat == 0)
@@ -22,10 +33,10 @@ void Dot::handleEvent(SDL_Event& e)
 		//Adjust the velocity
 		switch (e.key.keysym.sym)
 		{
-		case SDLK_UP: mVelY -= DOT_VEL; break;
-		case SDLK_DOWN: mVelY += DOT_VEL; break;
-		case SDLK_LEFT: mVelX -= DOT_VEL; break;
-		case SDLK_RIGHT: mVelX += DOT_VEL; break;
+		case SDLK_UP: mAccY -= DOT_ACC; break;
+		case SDLK_DOWN: mAccY += DOT_ACC; break;
+		case SDLK_LEFT: mAccX -= DOT_ACC; break;
+		case SDLK_RIGHT: mAccX += DOT_ACC; break;
 		}
 	}
 	//If a key was released
@@ -34,17 +45,19 @@ void Dot::handleEvent(SDL_Event& e)
 		//Adjust the velocity
 		switch (e.key.keysym.sym)
 		{
-		case SDLK_UP: mVelY += DOT_VEL; break;
-		case SDLK_DOWN: mVelY -= DOT_VEL; break;
-		case SDLK_LEFT: mVelX += DOT_VEL; break;
-		case SDLK_RIGHT: mVelX -= DOT_VEL; break;
+		case SDLK_UP: mAccY += DOT_ACC; break;
+		case SDLK_DOWN: mAccY -= DOT_ACC; break;
+		case SDLK_LEFT: mAccX += DOT_ACC; break;
+		case SDLK_RIGHT: mAccX -= DOT_ACC; break;
 		}
 	}
 
 }
 
-void Dot::move()
+void SimpleRect::move()
 {
+	mVelX += mAccX;
+	mVelY += mAccY;
 	//Move the dot left or right
 	mPosX += mVelX;
 
@@ -65,11 +78,13 @@ void Dot::move()
 		mPosY -= mVelY;
 	}
 
-	mDot.x = mPosX;
-	mDot.y = mPosY;
+	//mDot.x = mPosX;
+	//mDot.y = mPosY;
+
+	mAngle = (atan2(mVelY, mVelX) * 180 / M_PI) + 90;
 }
 
-void Dot::calculateDistance(SDL_Rect target)
+void SimpleRect::calculateDistance(SDL_Rect target)
 {
 	double dx = abs(target.x + target.w / 2) - (mPosX + mDot.w);
 	double dy = abs(target.y + target.h / 2) - (mPosY + mDot.h);
@@ -78,12 +93,7 @@ void Dot::calculateDistance(SDL_Rect target)
 	mDist = distance;
 }
 
-void Dot::render(SDL_Renderer* gRenderer)
+void SimpleRect::render(SDL_Renderer* gRenderer)
 {
-	//Show the dot
-	//gDotTexture.render(mPosX, mPosY);
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	SDL_RenderFillRect(gRenderer, &mDot);
-
-	//cout << mVelY << endl;
+	mTexture.render(gRenderer, (int)mPosX, (int)mPosY, NULL, mAngle, NULL, SDL_FLIP_NONE);
 }
