@@ -30,6 +30,15 @@ public:
 	//Set alpha modulation
 	void setAlpha(Uint8 alpha);
 
+	void createTextureRectangle(SDL_Renderer* gRenderer, int w, int h, unsigned char rgba[4]);
+
+	//Pixel manipulators
+	bool lockTexture();
+	bool unlockTexture();
+	void* getPixels();
+	int getPitch();
+
+	SDL_Texture* getTexture() { return mTexture; }
 	//Gets image dimensions
 	int getWidth();
 	int getHeight();
@@ -37,6 +46,9 @@ public:
 private:
 	//The actual hardware texture
 	SDL_Texture* mTexture;
+	void* mPixels;
+	int mPitch;
+	unsigned char* mBytes;
 
 	//Image dimensions
 	int mWidth;

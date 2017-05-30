@@ -6,6 +6,9 @@ LTexture::LTexture()
 	mTexture = NULL;
 	mWidth = 0;
 	mHeight = 0;
+	mPixels = NULL;
+	mPitch = 0;
+	mBytes = NULL;
 }
 
 LTexture::~LTexture()
@@ -64,6 +67,9 @@ void LTexture::free()
 		mTexture = NULL;
 		mWidth = 0;
 		mHeight = 0;
+		mPixels = NULL;
+		mPitch = 0;
+		mBytes = NULL;
 	}
 }
 
@@ -118,6 +124,70 @@ bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor
 	return mTexture != NULL;
 }
 
+void LTexture::createTextureRectangle(SDL_Renderer* gRenderer, int w, int h, unsigned char rgba[4])
+{
+	mWidth = w;
+	mHeight = h;
+	mTexture = SDL_CreateTexture(gRenderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_STREAMING, mWidth, mHeight);
+
+	//texture pixels to rgba value
+	//unsigned char* bytes = nullptr;
+	mPitch = 0;
+	
+	lockTexture();
+	for (int y = 0; y < mHeight; y++) {
+		for (int x = 0; x < mWidth; x++) {
+			memcpy(&mBytes[(y * mWidth + x) * sizeof(rgba)], rgba, sizeof(rgba));
+		}
+	}
+	unlockTexture();
+
+}
+
+bool LTexture::lockTexture()
+{
+	bool success = true;
+
+	//Texture is already locked
+	if (mBytes != NULL)
+	{
+		printf("Texture is already locked!\n");
+		success = false;
+	}
+	//Lock texture
+	else
+	{
+		if (SDL_LockTexture(mTexture, NULL, reinterpret_cast<void**>(&mBytes), &mPitch) != 0)
+		{
+			printf("Unable to lock texture! %s\n", SDL_GetError());
+			success = false;
+		}
+	}
+
+	return success;
+}
+
+bool LTexture::unlockTexture()
+{
+	bool success = true;
+
+	//Texture is not locked
+	if (mBytes == NULL)
+	{
+		printf("Texture is not locked!\n");
+		success = false;
+	}
+	//Unlock texture
+	else
+	{
+		SDL_UnlockTexture(mTexture);
+		mBytes = NULL;
+		mPitch = 0;
+	}
+
+	return success;
+}
+
 void LTexture::setColor(Uint8 red, Uint8 green, Uint8 blue)
 {
 	//Modulate texture rgb
@@ -136,6 +206,15 @@ void LTexture::setAlpha(Uint8 alpha)
 	SDL_SetTextureAlphaMod(mTexture, alpha);
 }
 
+void* LTexture::getPixels()
+{
+	return mPixels;
+}
+
+int LTexture::getPitch()
+{
+	return mPitch;
+}
 
 int LTexture::getWidth()
 {

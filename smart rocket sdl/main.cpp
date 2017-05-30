@@ -29,7 +29,7 @@ bool init()
 	//Initialization flag
 	bool success = true;
 
-	srand(time(NULL));
+	srand(unsigned int(time(NULL)));
 
 	//Initialize SDL
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -151,14 +151,16 @@ int main(int argc, char* args[])
 			targetRect.w = 30; targetRect.h = 30;
 			targetRect.x = SCREEN_WIDTH / 2 - targetRect.w / 2;
 			targetRect.y = 60;
+			unsigned char rgba[4] = { 0, 0, 0, 255 };
 
 			vector<CollisionObject*> collisionObjects;
 
 			//add target to collision objects
-			collisionObjects.push_back(new CollisionObject(targetRect, true));
+			collisionObjects.push_back(new CollisionObject(gRenderer, 30, 30, SCREEN_WIDTH / 2 - 15, 60, rgba, true));
 
 			//create a wall
-			collisionObjects.push_back(new CollisionObject(350, 20, SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT / 2 - 10, false));
+			collisionObjects.push_back(new CollisionObject(gRenderer, 350, 20, SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT / 2 - 10, rgba, false));
+			collisionObjects[1]->setAngle(45);
 			
 			//my test movement dot
 			SimpleRect myRect(gRenderer, "rectangle.png");
@@ -215,9 +217,8 @@ int main(int argc, char* args[])
 					printf("Unable to render time texture!\n");
 				}
 
-				//move the dot
+				//move my rect
 				myRect.move();
-				//dot.calculateDistance(targetRect);
 
 				myPop.updateRockets(collisionObjects);
 
@@ -225,16 +226,14 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-
 				//Render collision objects
 				for (vector<CollisionObject*>::const_iterator it = collisionObjects.begin(); it != collisionObjects.end(); ++it) {
 					(*it)->render(gRenderer);
 				}
-				
 				//render rockets in popluation
 				myPop.renderRockets(gRenderer);
 				myRect.render(gRenderer);
-
+				//render text
 				gTextTexture.render(gRenderer, 10, SCREEN_HEIGHT - gTextTexture.getHeight()*2, NULL, 0, NULL, SDL_FLIP_NONE);
 
 				//Update screen

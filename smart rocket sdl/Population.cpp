@@ -92,6 +92,13 @@ void Population::createMatingPool(SDL_Renderer * gRenderer)
 		for (int j = 0; j < inCount; j++) {
 			mMatePool.push_back(new Rocket(mPop[i]->getDna()));
 		}
+
+		if (mMatePool.size() == 0) {
+			//mating pool is current pop
+			for (int i = 0; i < mPopSize; i++) {
+				mMatePool.push_back(new Rocket(mPop[i]->getDna()));
+			}
+		}
 	}
 }
 
@@ -114,8 +121,8 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 		vector<Gene> newDna;
 		
 		//split on mid points
-		int midPoint = rand() % parentA.size();
-		for (int j = 0; j < parentA.size(); j++) {
+		unsigned int midPoint = rand() % parentA.size();
+		for (unsigned int j = 0; j < parentA.size(); j++) {
 			//Gene newGene((parentA[j].getVelX() + parentB[j].getVelX()) / 2, (parentA[j].getVelY() + parentB[j].getVelY()) / 2,
 			//	(parentA[j].getTime() + parentB[j].getTime()) / 2);
 			Gene newGene;

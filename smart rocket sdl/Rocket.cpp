@@ -61,7 +61,7 @@ Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
 	
 	mDna.clear();
 
-	for (int i=0; i<genes.size(); i++)
+	for (unsigned int i=0; i<genes.size(); i++)
 	{
 		mDna.push_back(genes[i]);
 	}
@@ -70,7 +70,7 @@ Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
 
 Rocket::Rocket(vector<Gene> genes)
 {
-	for (int i = 0; i<genes.size(); i++)
+	for (unsigned int i = 0; i<genes.size(); i++)
 	{
 		mDna.push_back(genes[i]);
 	}
@@ -252,6 +252,11 @@ bool Rocket::calculateCollision(SDL_Rect A, SDL_Rect B)
 	return false;
 }
 
+bool Rocket::calculateCollision(SDL_Rect A, double angleA, SDL_Rect B, double angleB)
+{
+	return false;
+}
+
 void Rocket::recreate(vector<Gene> genes)
 {
 	mDna.clear();
@@ -277,7 +282,7 @@ void Rocket::recreate(vector<Gene> genes)
 	mHitTarget = false;
 	mFitness = 0.0;
 
-	for (int i = 0; i<genes.size(); i++)
+	for (unsigned int i = 0; i<genes.size(); i++)
 	{
 		mDna.push_back(genes[i]);
 	}

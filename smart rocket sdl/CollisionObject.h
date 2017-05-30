@@ -1,26 +1,35 @@
 #pragma once
-#include <SDL.h>
+#include "main.h"
+#include "LTexture.h"
 
 class CollisionObject
 {
 public:
-	CollisionObject(int w, int h, int x, int y, bool isTarget);
-	CollisionObject(SDL_Rect rect, bool isTarget);
+	CollisionObject(SDL_Renderer* gRenderer, int w, int h, int x, int y, unsigned char rgba[4], bool isTarget);
 	~CollisionObject();
 
 	//Shows the rectangle on the screen
 	void render(SDL_Renderer* gRenderer);
 
-	SDL_Rect getRect() { return mObject; }
-	int getWidth() { return mObject.w; }
-	int getHeight() { return mObject.h; }
-	int getX() { return mObject.x; }
-	int getY() { return mObject.y; }
+	SDL_Rect getRect() { return mRect; }
+	int getWidth() { return mRect.w; }
+	int getHeight() { return mRect.h; }
+	int getX() { return mRect.x; }
+	int getY() { return mRect.y; }
 	bool getIsTarget() { return mIsTarget; }
+	double getAngle() { return mAngle; }
+
+	void setAngle(double angle) { mAngle = angle; }
 
 
 private:
-	SDL_Rect mObject;
+	LTexture mTexture;
+	//for collision
+	SDL_Rect mRect;
+	double mAngle;
+
+	unsigned char* color[4];
+
 	bool mIsTarget;
 };
 
