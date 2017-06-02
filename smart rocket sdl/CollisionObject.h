@@ -1,6 +1,7 @@
 #pragma once
 #include "main.h"
 #include "LTexture.h"
+#include "CollisionBox.h"
 
 class CollisionObject
 {
@@ -10,6 +11,7 @@ public:
 
 	//Shows the rectangle on the screen
 	void render(SDL_Renderer* gRenderer);
+	void setCollisionBox();
 
 	SDL_Rect getRect() { return mRect; }
 	int getWidth() { return mRect.w; }
@@ -19,6 +21,8 @@ public:
 	bool getIsTarget() { return mIsTarget; }
 	double getAngle() { return mAngle; }
 
+	CollisionBox getCollisionBox() { return mCollisionBox; }
+
 	void setAngle(double angle) { mAngle = angle; }
 
 
@@ -26,6 +30,7 @@ private:
 	LTexture mTexture;
 	//for collision
 	SDL_Rect mRect;
+	CollisionBox mCollisionBox;
 	double mAngle;
 
 	unsigned char* color[4];

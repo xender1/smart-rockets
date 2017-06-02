@@ -18,6 +18,9 @@ const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 900;
 
 //Rocket properties
+//start position
+static constexpr double ROCKET_START_POSX = SCREEN_WIDTH / 2;
+static constexpr double ROCKET_START_POSY = SCREEN_HEIGHT - 100;
 //max acceleration and velocity rates
 static constexpr double MAX_ROCKET_VEL = 3.0;
 static constexpr double MAX_ROCKET_ACC = 2.0;

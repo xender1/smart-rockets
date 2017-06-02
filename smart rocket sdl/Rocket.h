@@ -31,8 +31,6 @@ public:
 	void move(vector<CollisionObject*> collisionObjects);
 
 	bool checkCollision(vector<CollisionObject*> collisionObjects);
-	bool calculateCollision(SDL_Rect A, SDL_Rect B);
-	bool calculateCollision(SDL_Rect A, double angleA, SDL_Rect B, double angleB);
 
 	//reinitializes rocket values and sets genes
 	void recreate(vector<Gene> genes);
@@ -77,8 +75,8 @@ private:
 
 	bool mAlive;
 
-	//simple hit detection box
-	SDL_Rect mMe;
+	//hit detection box
+	CollisionBox mCollisionBox;
 	bool mHitTarget;
 
 	//fitness score

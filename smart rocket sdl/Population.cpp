@@ -135,14 +135,14 @@ void Population::createNextGeneration(SDL_Renderer * gRenderer)
 			//chance gene is brand new
 			if (rand() % 100 < MUTATION_SINGLE_GENE_CHANCE) {
 				newGene.randomize();
-				cout << "mutation of single gene" << endl;
+				//cout << "mutation of single gene" << endl;
 			}
 
 			newDna.push_back(newGene);
 		}
 		//create new rocket from dna in population, chance brand new dna is created
 		if (rand() % 100 < MUTATION_DNA_SEQUENCE_CHANCE) {
-			cout << "mutation of entire gene sequence" << endl;
+			//cout << "mutation of entire gene sequence" << endl;
 			mPop[i]->recreate(newDna);
 		}
 		else {

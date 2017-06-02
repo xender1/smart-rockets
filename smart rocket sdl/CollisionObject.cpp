@@ -18,7 +18,10 @@ CollisionObject::~CollisionObject()
 
 void CollisionObject::render(SDL_Renderer * gRenderer)
 {
-	//SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-	//SDL_RenderFillRect(gRenderer, &mRect);
 	mTexture.render(gRenderer, mRect.x, mRect.y, NULL, mAngle, NULL, SDL_FLIP_NONE);
+}
+
+void CollisionObject::setCollisionBox()
+{
+	mCollisionBox.setCollisionBox(getWidth(), getHeight(), getX() + getWidth()/2, getY() + getHeight() / 2, mAngle);
 }

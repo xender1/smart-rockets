@@ -3,8 +3,8 @@
 Rocket::Rocket(SDL_Renderer* gRenderer, string path)
 {
 	//Initialize the offsets
-	mPosX = SCREEN_WIDTH / 2;
-	mPosY = SCREEN_HEIGHT - 200;
+	mPosX = ROCKET_START_POSX;
+	mPosY = ROCKET_START_POSY;
 
 	//Initialize the velocity
 	mVelX = 0.0;
@@ -37,8 +37,8 @@ Rocket::Rocket(SDL_Renderer * gRenderer, string path, vector<Gene> genes)
 {
 	
 	//Initialize the offsets
-	mPosX = SCREEN_WIDTH / 2;
-	mPosY = SCREEN_HEIGHT - 200;
+	mPosX = ROCKET_START_POSX;
+	mPosY = ROCKET_START_POSY;
 
 	//Initialize the velocity
 	mVelX = 0.0;
@@ -78,17 +78,6 @@ Rocket::Rocket(vector<Gene> genes)
 
 Rocket::~Rocket()
 {
-	//Initialize the offsets
-	mPosX = SCREEN_WIDTH / 2;
-	mPosY = SCREEN_HEIGHT - 100;
-
-	//Initialize the velocity
-	mVelX = 0.0;
-	mVelY = 0.0;
-	mVelA = 0.0;
-	mAngle = 0.0;
-	mAccX = 0;
-	mAccY = 0;
 	mTexture.free();
 	mDna.clear();
 }
@@ -181,8 +170,6 @@ void Rocket::setVelocityFromDna()
 
 void Rocket::move(vector<CollisionObject*> collisionObjects)
 {
-	//mVelX += mAccX;
-	//mVelY += mAccY;
 	if (mAlive && !mHitTarget) {
 		setVelocityFromDna();
 
@@ -194,29 +181,19 @@ void Rocket::move(vector<CollisionObject*> collisionObjects)
 			mAlive = false;
 		}
 
-		//move angle
-	/*	double result = (atan2(mVelY, mVelX) * 180 / M_PI) + 90;
-
-		if (mAngle < result) {
-			mAngle += ROCKET_ANGLE_VEL;
-		}
-		else if (mAngle > result) {
-			mAngle -= ROCKET_ANGLE_VEL;
-		}
-		mAngle = result;
-		*/
-
 	}
 }
 
 bool Rocket::checkCollision(vector<CollisionObject*> collisionObjects)
 {
 	bool collided = false;
-	mMe.x = mPosX; mMe.y = mPosY;
-	mMe.w = mTexture.getWidth(); mMe.h = mTexture.getHeight();
+
+	mCollisionBox.setCollisionBox(mTexture.getWidth(), mTexture.getHeight(), mPosX + mTexture.getWidth() / 2, mPosY + mTexture.getHeight() / 2, mAngle);
+
 	//loop through collision objects and look for collisions
 	for (vector<CollisionObject*>::const_iterator it = collisionObjects.begin(); it != collisionObjects.end(); ++it) {
-		if (calculateCollision((*it)->getRect() , mMe)) {
+		(*it)->setCollisionBox();
+		if (mCollisionBox.calculateCollision((*it)->getCollisionBox())) {
 			if ((*it)->getIsTarget()) mHitTarget = true;
 			collided = true;
 		}
@@ -225,45 +202,13 @@ bool Rocket::checkCollision(vector<CollisionObject*> collisionObjects)
 	return collided;
 }
 
-bool Rocket::calculateCollision(SDL_Rect A, SDL_Rect B)
-{
-	//The sides of the rectangles
-	int leftA, leftB;
-	int rightA, rightB;
-	int topA, topB;
-	int bottomA, bottomB;
-
-	//Calculate the sides of rect A
-	leftA = A.x;
-	rightA = A.x + A.w;
-	topA = A.y;
-	bottomA = A.y + A.h;
-
-	//Calculate the sides of rect B
-	leftB = B.x;
-	rightB = B.x + B.w;
-	topB = B.y;
-	bottomB = B.y + B.h;
-
-	if (((bottomA <= topB) || (topA >= bottomB) || (rightA <= leftB) || (leftA >= rightB)) == false) {
-		return true;
-	}
-
-	return false;
-}
-
-bool Rocket::calculateCollision(SDL_Rect A, double angleA, SDL_Rect B, double angleB)
-{
-	return false;
-}
-
 void Rocket::recreate(vector<Gene> genes)
 {
 	mDna.clear();
 
 	//Initialize the offsets
-	mPosX = SCREEN_WIDTH / 2;
-	mPosY = SCREEN_HEIGHT - 200;
+	mPosX = ROCKET_START_POSX;
+	mPosY = ROCKET_START_POSY;
 
 	//Initialize the velocity
 	mVelX = 0.0;

@@ -1,21 +1,22 @@
 #pragma once
 #include "main.h"
 #include "LTexture.h"
+#include "CollisionObject.h"
 
 //The dot that will move around on the screen
 class SimpleRect
 {
 public:
 	//The dimensions of the dot
-	static const int DOT_WIDTH = 10;
-	static const int DOT_HEIGHT = 50;
+	static const int RECT_WIDTH = 20;
+	static const int RECT_HEIGHT = 20;
 
 	//Maximum axis velocity of the dot
-	static const int DOT_VEL = 5;
+	static const int RECT_VEL = 5;
 
-	static constexpr double DOT_ACC = 0.1;
-	static constexpr double MAX_ACC = 1;
-	static constexpr double MAX_VEL = 5;
+	static constexpr double RECT_ACC = 1;// 0.1;
+	static constexpr double RECT_MAX_ACC = 1;
+	static constexpr double RECT_MAX_VEL = 5;
 
 	//Initializes the variables
 	SimpleRect(SDL_Renderer* gRenderer, string path);
@@ -25,7 +26,8 @@ public:
 	void handleEvent(SDL_Event& e);
 
 	//Moves the dot
-	void move();
+	void move(vector<CollisionObject*> collisionObjects);
+	bool checkCollision(vector<CollisionObject*> collisionObjects);
 
 	void calculateDistance(SDL_Rect target);
 
@@ -34,9 +36,15 @@ public:
 
 	double getDistance() { return mDist; }
 
+	string getCoords() { string ret; ret = to_string((int)mPosX); ret.append(","); ret.append(to_string((int)mPosY)); return ret; }
+
+	CollisionBox getCollisionBox() { return mCollisionBox; }
+
 private:
 	//the rectangle for the dot
 	SDL_Rect mDot;
+
+	CollisionBox mCollisionBox;
 
 	LTexture mTexture;
 

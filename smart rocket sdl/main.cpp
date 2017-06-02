@@ -1,7 +1,6 @@
 #include "main.h"
-#include "SimpleRect.h"
 #include "Population.h"
-
+#include "SimpleRect.h"
 
 //Starts up SDL and creates window
 bool init();
@@ -160,10 +159,17 @@ int main(int argc, char* args[])
 
 			//create a wall
 			collisionObjects.push_back(new CollisionObject(gRenderer, 350, 20, SCREEN_WIDTH / 2 - 175, SCREEN_HEIGHT / 2 - 10, rgba, false));
-			collisionObjects[1]->setAngle(45);
+
+			int angle = 20;
+			collisionObjects[1]->setAngle(angle);
 			
 			//my test movement dot
 			SimpleRect myRect(gRenderer, "rectangle.png");
+
+			rgba[0] = 255; rgba[1] = 0; rgba[2] = 0;
+			LTexture corner1;
+			corner1.createTextureRectangle(gRenderer, 8, 8, rgba);
+
 
 			//Population of rockets
 			Population myPop(gRenderer, 100);
@@ -208,8 +214,7 @@ int main(int argc, char* args[])
 					myPop.createNextGeneration(gRenderer);
 				}
 				else {
-					//timeText << to_string(dot.getDistance()) << " " << to_string(100 * (1 / dot.getDistance()));
-					timeText << to_string(myPop.getGenerationNum()) << " " << to_string(myPop.getMaxFitScore());
+					timeText << myRect.getCoords();
 				}
 				//Render text
 				if (!gTextTexture.loadFromRenderedText(timeText.str().c_str(), textColor, gFont, gRenderer))
@@ -218,7 +223,7 @@ int main(int argc, char* args[])
 				}
 
 				//move my rect
-				myRect.move();
+				myRect.move(collisionObjects);
 
 				myPop.updateRockets(collisionObjects);
 
@@ -233,8 +238,11 @@ int main(int argc, char* args[])
 				//render rockets in popluation
 				myPop.renderRockets(gRenderer);
 				myRect.render(gRenderer);
+
 				//render text
 				gTextTexture.render(gRenderer, 10, SCREEN_HEIGHT - gTextTexture.getHeight()*2, NULL, 0, NULL, SDL_FLIP_NONE);
+
+		
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);
